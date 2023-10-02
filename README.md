@@ -88,22 +88,27 @@ apigw_stage      = "dev"
 
 ## App 
 
-1. Upload Image
+1. User Sign-in
+<kbd>
+  <img src="diagrams/sign-in.png">
+</kbd>
+
+2. Upload Image
 <kbd>
   <img src="diagrams/page1-upload.png">
 </kbd>
 
-2. View Image
+3. View Image
 <kbd>
   <img src="diagrams/page2.png">
 </kbd>
 
-3. Detect labels using image name
+4. Detect labels using image name
 <kbd>
   <img src="diagrams/page3-by-image.png">
 </kbd>
 
-2. Detect labels using label key
+5. Detect labels using label key
 <kbd>
   <img src="diagrams/page3-by-labels.png">
 </kbd>
