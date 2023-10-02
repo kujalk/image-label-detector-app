@@ -24,7 +24,7 @@ export default function SearchLabels () {
 
     //console.log("token: ", token)
 
-    const url = awsExports.aws_api_url //'https://kbsgb00m5h.execute-api.ap-southeast-1.amazonaws.com/dev/labels';
+    const url = awsExports.aws_api_url
 
     const params = (value === 'labels') ? { labels: key } : { image: key };
 
