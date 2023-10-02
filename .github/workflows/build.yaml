@@ -1,0 +1,87 @@
+name: 'Image Label Detector App'
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+          type: choice
+          description: Terraform apply or create
+          options: 
+          - apply
+          - destroy
+          required: true
+          
+jobs:
+  build-and-deploy:
+    name: 'Build and Deployment of AWS Resources'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-1
+      
+    # Install the latest version of Terraform CLI
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_wrapper: false
+      
+    - name: Terraform Init
+      run: cd infrastructure;terraform init
+
+    - name: Terraform Plan
+      run: cd infrastructure;terraform plan -input=false
+
+    # Applying changes to Infrastructure (for each environment)
+    - name: Terraform Apply/Destroy
+      run: cd infrastructure;terraform ${{ github.event.inputs.action }}  -auto-approve -input=false
+
+    - name: Build React App and push to S3
+      if: github.event.inputs.action == 'apply'
+      run: |
+        cd infrastructure
+
+        # Get output from Terraform
+        cognito_userpool_id=$(terraform output -raw cognito_userpool_id)
+        cognito_client_id=$(terraform output -raw cognito_client_id)
+        cognito_identitypool_id=$(terraform output -raw cognito_identitypool_id)
+        frontend_bucket=$(terraform output -raw frontend_bucket)
+        storage_bucket=$(terraform output -raw storage_bucket)
+        api_gw=$(terraform output -raw api_gw)
+        website_endpoint=$(terraform output -raw website_endpoint)
+
+        # Export the output as an environment variable
+        export cognito_userpool_id=$cognito_userpool_id
+        export cognito_client_id=$cognito_client_id
+        export cognito_identitypool_id=$cognito_identitypool_id
+        export frontend_bucket=$frontend_bucket
+        export storage_bucket=$storage_bucket
+        export api_gw=$api_gw
+        export website_endpoint=$website_endpoint
+
+        # Replace placeholders in the template file
+        cd ../frontend
+        envsubst < src/aws-exports.js > src/aws-exports.js
+        cat src/aws-exports.js
+
+        # Build react app
+        npm install react-scripts --save
+        npm cache clean --force
+        npm run build
+
+        # Push app to S3
+        aws s3 cp build/ s3://$frontend_bucket/ --recursive
+        echo "App url is http://$website_endpoint"

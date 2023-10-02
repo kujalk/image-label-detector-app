@@ -18,14 +18,10 @@ output "storage_bucket" {
   value = aws_s3_bucket.storage.id
 }
 
-output "identity_pool_id" {
-  value = aws_cognito_identity_pool.id.id
-}
-
-output "api-gw" {
+output "api_gw" {
   value = aws_apigatewayv2_stage.apigw.invoke_url
 }
 
-output "website-endpoint" {
+output "website_endpoint" {
   value = aws_s3_bucket_website_configuration.web.website_endpoint
 }
