@@ -1,4 +1,4 @@
-# image-label-detector-app
+# Label Lytics
 Image label detector app
 
 ## Blog
