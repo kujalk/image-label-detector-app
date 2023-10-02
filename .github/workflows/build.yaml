@@ -74,7 +74,7 @@ jobs:
 
         # Replace placeholders in the template file
         cd ../frontend
-        envsubst < src/aws-exports.js > src/aws-exports.js
+        envsubst < src/aws-exports.tpl > src/aws-exports.js
         cat src/aws-exports.js
 
         # Build react app
