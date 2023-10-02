@@ -32,7 +32,7 @@ https://scripting4ever.wordpress.com/2023/10/02/html-strings-to-pdf-generation-u
 ```terraform
 terraform {
   backend "s3" {
-    bucket = "gitactiont"
+    bucket = "gitaction"
     key    = "gittfstate"
     region = "ap-southeast-1"
   }
@@ -68,7 +68,7 @@ apigw_stage      = "dev"
 2. Select the Branch and Apply
 
 <kbd>
-  <img src="diagrams/create.png">
+  <img src="diagrams/apply.png">
 </kbd>
 
 <p align="center">
@@ -107,6 +107,7 @@ apigw_stage      = "dev"
 <kbd>
   <img src="diagrams/page3-by-labels.png">
 </kbd>
+
 ## Developer
 
 Designed and developed by K.Janarthanan
