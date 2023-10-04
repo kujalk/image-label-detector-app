@@ -3,7 +3,6 @@ Image label detector app
 
 ## Blog
 
-https://scripting4ever.wordpress.com/2023/10/04/an-image-label-detector-app-using-aws-services/
 
 ## Resources Created
 - S3 for Website hosting
